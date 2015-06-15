@@ -10,8 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
-
+import es.examenPes.controler.ejb.AmpliarCupoControllerEjb;
 import es.examenPes.controler.ejb.BuscarPorIdControlerEjb;
 import es.examenPes.controler.ejb.DarAltaTarjetaEjb;
 import es.examenPes.controler.ejb.ListarTodoControlerEjb;
@@ -43,8 +42,7 @@ public class BancoServlet extends HttpServlet {
 		RequestDispatcher rd;
 		switch (action) {
 		
-		case "ListaTodo": // se invoca al controlador adecuado
-			// se redirige a otra pagina
+		case "ListaTodo": 
 			ListarTodoControlerEjb todos = new ListarTodoControlerEjb();
 			ArrayList<TarjetaCredito> tarjeta = todos.listarTodos();
 			request.setAttribute("tarjetas", tarjeta);
@@ -54,7 +52,7 @@ public class BancoServlet extends HttpServlet {
 			rd.forward(request, response);			
 			break;
 		
-		case "ampliarCupo": // se invoca al controlador adecuado
+		 // se invoca al controlador adecuado
 			// se redirige a otra pagina
 			/*ListarTodoControllerEjb todos1 = new ListarTodoControllerEjb();
 			ArrayList<Cliente> clientes1 = todos1.listarTodos();
@@ -64,6 +62,15 @@ public class BancoServlet extends HttpServlet {
 			request.setAttribute("titulo", titulo);
 			rd.forward(request, response);			
 			break;*/
+		case "ampliarCupo":
+			int ident = Integer.parseInt(request.getParameter("id"));
+			int aumento = Integer.parseInt(request.getParameter("aumento"));
+			AmpliarCupoControllerEjb controladorAumentar = new AmpliarCupoControllerEjb();
+			TarjetaCredito result = controladorAumentar.aumentacupo(ident,aumento);
+			request.setAttribute("tarjetas", result);
+			rd=request.getRequestDispatcher("/jsp/ListarTodo.jsp");
+			rd.forward(request, response);
+			break;
 			
 		case "bloquearTarjeta": // se invoca al controlador adecuado que
 								// obtendra
@@ -81,15 +88,29 @@ public class BancoServlet extends HttpServlet {
 
 			break;
 		
-	case "buscarPorId":
-		int id = Integer.parseInt(request.getParameter("id"));
-		BuscarPorIdControlerEjb controladorBusqueda = new BuscarPorIdControlerEjb();
-		ArrayList<TarjetaCredito> resultado =  controladorBusqueda.buscarPorId(id);
-		request.setAttribute("id", resultado);
-		rd = request.getRequestDispatcher("/jsp/ListarTodo.jsp");
-		request.setAttribute("titulo", "Búsqueda por: " + id);
-		rd.forward(request, response);
-		break;
+		case "buscarPorId":
+			int id = Integer.parseInt(request.getParameter("id"));
+			BuscarPorIdControlerEjb controladorBusqueda = new BuscarPorIdControlerEjb();
+			TarjetaCredito resultado =  controladorBusqueda.buscarPorId(id);
+			request.setAttribute("tarjetas", resultado);
+			rd = request.getRequestDispatcher("/jsp/ListarTodo2.jsp");
+			request.setAttribute("titulo", "Búsqueda por: " + id);
+			rd.forward(request, response);
+			break;
+			
+		case "buscarParaAmpliar":
+			TarjetaCredito resultado1 = new TarjetaCredito();
+			resultado1.setId( Integer.parseInt(request.getParameter("id"))); 
+			resultado1.setNumero(request.getParameter("numero"));
+			resultado1.setCupoMaximo(Integer.parseInt(request.getParameter("cupoMaximo")));
+			resultado1.setCupoDisponible(Integer.parseInt(request.getParameter("cupoDisponible")));
+			resultado1.setTipo(request.getParameter("tipo"));
+					
+			request.setAttribute("tarjetas", resultado1);
+			rd = request.getRequestDispatcher("/jsp/ListarTodo2.jsp");
+			
+			rd.forward(request, response);
+			break;
 	
 	}
 	}
@@ -131,14 +152,44 @@ public class BancoServlet extends HttpServlet {
 	case "buscarPorId":
 		int id = Integer.parseInt(request.getParameter("id"));
 		BuscarPorIdControlerEjb controladorBusqueda = new BuscarPorIdControlerEjb();
-		ArrayList<TarjetaCredito> resultado =  controladorBusqueda.buscarPorId(id);
+		TarjetaCredito resultado =  controladorBusqueda.buscarPorId(id);
 		request.setAttribute("id", resultado);
 		rd = request.getRequestDispatcher("/jsp/ListarTodo.jsp");
 		request.setAttribute("titulo", "Búsqueda por: " + id);
 		rd.forward(request, response);
 		break;
 		
+	
+		
+		
+	case "buscarParaAmpliar":
+		TarjetaCredito resultado1 = new TarjetaCredito();
+		resultado1.setId( Integer.parseInt(request.getParameter("id"))); 
+		resultado1.setNumero(request.getParameter("numero"));
+		resultado1.setCupoMaximo(Integer.parseInt(request.getParameter("cupoMaximo")));
+		resultado1.setCupoDisponible(Integer.parseInt(request.getParameter("cupoDisponible")));
+		resultado1.setTipo(request.getParameter("tipo"));
+				
+		request.setAttribute("tarjetas", resultado1);
+		rd = request.getRequestDispatcher("/jsp/ListarTodo2.jsp");
+		
+		rd.forward(request, response);
+		break;
+		
+		
+		
 	case "ampliarCupo":
+		TarjetaCredito actualizado = new TarjetaCredito();
+		actualizado.setId(Integer.parseInt(request.getParameter("id")));
+		actualizado.setCupoMaximo(Integer.parseInt(request.getParameter("cupoMaximo"))); 
+		int aumento = Integer.parseInt(request.getParameter("aumento"));
+		
+		AmpliarCupoControllerEjb controladorAumentar = new AmpliarCupoControllerEjb();
+		TarjetaCredito result = controladorAumentar.aumentacupo(actualizado,aumento);
+		request.setAttribute("tarjetas", result);
+		rd=request.getRequestDispatcher("/jsp/ListarTodo.jsp");
+		rd.forward(request, response);
+		break;
 		
 	}
 	}

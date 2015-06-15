@@ -11,10 +11,10 @@ import es.examenPes.persistence.model.jdbc.TarjetaDaoJdbc;
 
 public class BuscarPorIdControlerEjb implements BuscarPorIdControler{
 	
-public ArrayList<TarjetaCredito> buscarPorId(int id ) {
+public TarjetaCredito buscarPorId(int id ) {
 		
 		TarjetaDaoJdbc daoTarjeta = new TarjetaDaoJdbc();
-		ArrayList<TarjetaCredito> tarjeta = daoTarjeta.buscarPorId(id);
+		TarjetaCredito tarjeta = daoTarjeta.buscarPorId(id);
 		return tarjeta;
 		
 	}

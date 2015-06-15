@@ -10,6 +10,10 @@ public interface TarjetaDao {
 
 	ArrayList<TarjetaCredito> findAll();
 
-	ArrayList<TarjetaCredito> buscarPorId(int id);
+	TarjetaCredito buscarPorId(int id);
+
+	void update(TarjetaCredito tarjeta);
+
+	void updatecupo(TarjetaCredito tarjeta, int cupo);
 
 }

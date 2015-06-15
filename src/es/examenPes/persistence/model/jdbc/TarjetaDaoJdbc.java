@@ -7,7 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-
 import es.examenPes.model.entity.TarjetaCredito;
 import es.examenPes.persistence.model.dao.TarjetaDao;
 
@@ -65,10 +64,8 @@ public class TarjetaDaoJdbc implements TarjetaDao {
 		ps.setInt(4, tarjeta.getCupoDisponible());
 		ps.setString(5, tarjeta.getTipo());
 		ps.setString(6, tarjeta.getNumComprobacion());
-		
-			
-			ps.setString(7, tarjeta.getContrasenha());
-			ps.setBoolean(8, tarjeta.isBloqueada());
+	    ps.setString(7, tarjeta.getContrasenha());
+	    ps.setBoolean(8, tarjeta.isBloqueada());
 			
 			ps.executeUpdate();
 			cx.commit();
@@ -123,27 +120,59 @@ public class TarjetaDaoJdbc implements TarjetaDao {
 	}
 	
 	
-	public ArrayList<TarjetaCredito> buscarPorId(int id) {
+	public TarjetaCredito buscarPorId(int id) {
 		
-		ArrayList<TarjetaCredito> tarjeta = new ArrayList<TarjetaCredito>();
+		TarjetaCredito tarjeta =new TarjetaCredito();
 		abrirConexion();
 		try {
-			PreparedStatement ps = cx.prepareStatement("SELECT * FROM cliente WHERE id LIKE ?");
-			ps.setString(1, id + "%");
+			PreparedStatement ps = cx.prepareStatement("SELECT * FROM tarjetacredito WHERE id= ?");
+			ps.setInt(1, id);
 			ResultSet consulta = ps.executeQuery();
-			while (consulta.next()) {
-				TarjetaCredito tarjetaTemporal = new TarjetaCredito();
-				tarjetaTemporal.setId(consulta.getInt("id"));
-				tarjetaTemporal.setNumero("numero");
-				tarjetaTemporal.setCupoMaximo(consulta.getInt("cupoMaximo"));
-				tarjetaTemporal.setCupoDisponible(consulta.getInt("cupoDisponible"));
-				tarjetaTemporal.setTipo("tipo");
-				tarjetaTemporal.setNumComprobacion("numComprobacion");
-				tarjetaTemporal.setContrasenha("contrasenha");
-				tarjetaTemporal.setBloqueada(true);
+			consulta.next();
+				tarjeta.setId(consulta.getInt("id"));
+				tarjeta.setNumero("numero");
+				tarjeta.setCupoMaximo(consulta.getInt("cupoMaximo"));
+				tarjeta.setCupoDisponible(consulta.getInt("cupoDisponible"));
+				tarjeta.setTipo("tipo");
+				tarjeta.setNumComprobacion("numComprobacion");
+				tarjeta.setContrasenha("contrasenha");
+				tarjeta.setBloqueada(true);
 
-				tarjeta.add(tarjetaTemporal);
+				
 			}
+				
+		 catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+	
+		return tarjeta;
+	}
+
+	
+public TarjetaCredito buscarParaAumento(int id, int aumento) {
+		
+		TarjetaCredito tarjeta = new TarjetaCredito();
+		abrirConexion();
+		try {
+			PreparedStatement ps = cx.prepareStatement("SELECT * FROM tarjetacredito WHERE id LIKE ?");
+			ps.setInt(1, id );
+			ResultSet consulta = ps.executeQuery();
+			consulta.next();
+				
+			tarjeta.setId(consulta.getInt("id"));
+			tarjeta.setNumero("numero");
+			tarjeta.setCupoMaximo(consulta.getInt("cupoMaximo")+aumento);
+			tarjeta.setCupoDisponible(consulta.getInt("cupoDisponible"));
+			tarjeta.setTipo("tipo");
+			tarjeta.setNumComprobacion("numComprobacion");
+			tarjeta.setContrasenha("contrasenha");
+			tarjeta.setBloqueada(true);
+
+				
+			
 				
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -153,6 +182,42 @@ public class TarjetaDaoJdbc implements TarjetaDao {
 		
 	
 		return tarjeta;
+	}
+
+	@Override
+	public void updatecupo(TarjetaCredito tarjeta, int aumento) {
+		abrirConexion();
+		PreparedStatement ps;
+		try {
+			ps = cx.prepareStatement("UPDATE tarjetacredito SET cupoDisponible=?  WHERE idCliente = ?");
+			
+			
+				
+				ps.setInt(1, aumento );
+				
+				ps.setInt(2, id);
+				
+				 ps.executeUpdate();
+				 cx.commit();
+
+				
+			}
+		 catch (SQLException e) {
+			 try {
+				cx.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+
+		finally {
+			cerrarConexion();
+	}
+
 	}
 
 

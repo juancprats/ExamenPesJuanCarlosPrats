@@ -9,7 +9,31 @@
 <title>Insert title here</title>
 </head>
 <body>
-<%ArrayList<TarjetaCredito> tarjeta = (ArrayList<TarjetaCredito>)request.getAttribute("tarjeta");%>
+<script type="text/javascript">
+function enviar(boton){
+      // asigna al formulario el formulario que está en la lista de formularios en la 
+      //posición indicada por el nombre del botón pulsado, que lleva un secuencial
+      var formulario=document.forms.item(boton.name)
+     
+      // alteramos el actión según el botón pulsado
+      switch (boton.value){
+      case "Ampliar":
+          formulario.action="${ pageContext.request.contextPath}/Banco/buscarParaAmpliar";
+          formulario.submit();
+          break;
+      
+        //el editar no funciona, hay q hacerlo como Manuel ha hecho modificar
+      case "Bloquear":
+
+          document.getElementById("numero " + boton.name).disabled=false;
+          document.getElementById("cupoMaximo " + boton.name).disabled=false;
+          document.getElementById("cupoMaximo " + boton.name).disabled=false;
+          document.getElementById("tipo " + boton.name).disabled=false;
+          break;
+      }
+  }
+</script>
+<%ArrayList<TarjetaCredito> tarjeta = (ArrayList<TarjetaCredito>) request.getAttribute("tarjetas");%>
     <table>
         <tr>
             <th>ID</th>
@@ -20,26 +44,33 @@
             
         </tr>
         <!-- Las siguientes se cargan dinamicamente -->
-   
+        <% int n=1; %>
         <%for (TarjetaCredito t : tarjeta) {%>
         
             
         <tr>
-         <form action="${ pageContext.request.contextPath}/Banco/Modificar"  method="post">
-            <td><input type="text" name="id" value="<%=t.getId()%>" size=5></td>
-            <td><%=t.getNumero()%></td>
-            <td><%=t.getCupoMaximo()%></td>
-            <td><%=t.getCupoDisponible()%></td>
-            <td><%=t.getTipo()%></td>
+         <form action=""  method="post" onsubmit="return false;">
+            <td><input type="text" name="id" id="id <%=n %>" value="<%=t.getId()%>" size=5></td>
+            <td><input type="text" name="numero" id="numero <%=n %>" value="<%=t.getNumero()%>" size=5></td>
+            <td><input type="text" name="cupoMaximo" id="cupoMaximo <%=n %>" value="<%=t.getCupoMaximo()%>" size=5></td>
+            <td><input type="text" name="cupoDisponible" id="cupoDisponible <%=n %>" value="<%=t.getCupoDisponible()%>" size=5></td>
+            <td><input type="text" name="tipo" id="tipo <%=n %>" value="<%=t.getTipo()%>" size=5></td>
+           
+
             
-            <td><input type="button" name="<%=t.getId()%>" value="Modificar" /></td>
+            <td><input type="submit" value="Ampliar" name="<%=n %>" onclick="enviar(this);"/></td>
+            <td><input type="submit" value="Bloquear" name="<%=n %>" onclick="enviar(this)"/></td>
+            <td><input type="submit" value="Modificar" name="<%=n %>" onclick="enviar(this)"/></td>
+                
         </form>
-        </tr>
         
+        </tr>
+        <%=n++ %>
     
 
         <%}%>
         
     </table>
+   <!--   ${ pageContext.request.contextPath}/Banco/Modificar-->
 </body>
 </html>
