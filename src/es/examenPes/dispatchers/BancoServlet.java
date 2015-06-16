@@ -171,7 +171,6 @@ public class BancoServlet extends HttpServlet {
 		
 	case "altaTarjeta": 
 		
-		
 		String numero =request.getParameter("numero");
 		int cupoMaximo = Integer.parseInt(request.getParameter("cupoMaximo"));
 		int cupoDisponible = Integer.parseInt(request.getParameter("cupoDisponible"));
@@ -185,7 +184,7 @@ public class BancoServlet extends HttpServlet {
 
 		DarAltaTarjetaEjb controlador = new DarAltaTarjetaEjb();
 		controlador.agregar(tarjeta);
-		rd = request.getRequestDispatcher("../index.html");
+		rd = request.getRequestDispatcher("../index.jsp");
 		rd.forward(request, response);
 
 		break;

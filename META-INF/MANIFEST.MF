@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: ExamenPesJuanCarlosPrats
+Bundle-SymbolicName: ExamenPesJuanCarlosPrats
+Bundle-Version: 1.0.0.qualifier
+Export-Package: es.examenPes.controler,
+ es.examenPes.controler.ejb,
+ es.examenPes.controller,
+ es.examenPes.dispatchers,
+ es.examenPes.model.entity,
+ es.examenPes.persistence.model.dao,
+ es.examenPes.persistence.model.jdbc
