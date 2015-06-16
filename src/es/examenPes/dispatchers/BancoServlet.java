@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import es.examenPes.controler.ejb.AmpliarCupoControllerEjb;
+import es.examenPes.controler.ejb.BloquearTarjetaControllerEjb;
 import es.examenPes.controler.ejb.BuscarPorIdControlerEjb;
 import es.examenPes.controler.ejb.DarAltaTarjetaEjb;
 import es.examenPes.controler.ejb.ListarTodoControlerEjb;
@@ -63,22 +64,29 @@ public class BancoServlet extends HttpServlet {
 			rd.forward(request, response);			
 			break;*/
 		case "ampliarCupo":
-			int ident = Integer.parseInt(request.getParameter("id"));
+			TarjetaCredito actualizado = new TarjetaCredito();
+			actualizado.setId(Integer.parseInt(request.getParameter("id")));
+			actualizado.setCupoMaximo(Integer.parseInt(request.getParameter("cupoMaximo"))); 
 			int aumento = Integer.parseInt(request.getParameter("aumento"));
+			
 			AmpliarCupoControllerEjb controladorAumentar = new AmpliarCupoControllerEjb();
-			TarjetaCredito result = controladorAumentar.aumentacupo(ident,aumento);
+			TarjetaCredito result = controladorAumentar.aumentacupo(actualizado,aumento);
 			request.setAttribute("tarjetas", result);
-			rd=request.getRequestDispatcher("/jsp/ListarTodo.jsp");
+			rd = request.getRequestDispatcher("/jsp/ListarTodo2.jsp");
+			
 			rd.forward(request, response);
+			
 			break;
 			
-		case "bloquearTarjeta": // se invoca al controlador adecuado que
-								// obtendra
-								// se redirige a otra pagina
-			
-			/*rd = request.getRequestDispatcher("/jsp/BuscarPorNombre.jsp");
-			rd.forward(request, response);
-			break;*/
+		case "bloquearTarjeta": 
+			ListarTodoControlerEjb todo = new ListarTodoControlerEjb();
+			ArrayList<TarjetaCredito> tarj = todo.listarTodos();
+			request.setAttribute("tarjetas", tarj);
+			rd = request.getRequestDispatcher("/jsp/ListaTodoBloqueo.jsp");
+			titulo = "Listado general de tarjetas";
+			request.setAttribute("titulo", titulo);
+			rd.forward(request, response);			
+			break;
 			
 		case "altaTarjeta": // se invoca al controlador adecuado
 			
@@ -110,6 +118,40 @@ public class BancoServlet extends HttpServlet {
 			rd = request.getRequestDispatcher("/jsp/ListarTodo2.jsp");
 			
 			rd.forward(request, response);
+			break;
+			
+		case "buscarParaBloquear":
+			TarjetaCredito resulbloqueo = new TarjetaCredito();
+			resulbloqueo.setId( Integer.parseInt(request.getParameter("id"))); 
+			resulbloqueo.setNumero(request.getParameter("numero"));
+			resulbloqueo.setCupoMaximo(Integer.parseInt(request.getParameter("cupoMaximo")));
+			resulbloqueo.setCupoDisponible(Integer.parseInt(request.getParameter("cupoDisponible")));
+			resulbloqueo.setTipo(request.getParameter("tipo"));
+			resulbloqueo.setContrasenha(request.getParameter("contrasenha"));
+			resulbloqueo.setNumComprobacion(request.getParameter("numComprobacion"));
+			resulbloqueo.setTipo(request.getParameter("bloqueada"));
+					
+			request.setAttribute("tarjetas", resulbloqueo);
+			rd = request.getRequestDispatcher("/jsp/ListarTodoBloqueo2.jsp");
+			
+			rd.forward(request, response);
+			break;
+			
+		case "bloqueo":
+			TarjetaCredito actualizadobloqueo = new TarjetaCredito();
+			actualizadobloqueo.setId(Integer.parseInt(request.getParameter("id")));
+			actualizadobloqueo.setCupoDisponible(Integer.parseInt(request.getParameter("cupoDisponible")));
+			actualizadobloqueo.setCupoMaximo(Integer.parseInt(request.getParameter("cupoMaximo")));
+			actualizadobloqueo.setContrasenha(request.getParameter("contrasenha"));
+			actualizadobloqueo.setNumComprobacion(request.getParameter("numComprobacion"));
+			actualizadobloqueo.setNumero(request.getParameter("numero"));
+			actualizadobloqueo.setTipo(request.getParameter("tipo"));
+			actualizadobloqueo.setTipo(request.getParameter("bloqueada"));		
+			BloquearTarjetaControllerEjb controladorbloquear = new BloquearTarjetaControllerEjb();
+			TarjetaCredito resultbloqueo = controladorbloquear.bloqueada(actualizadobloqueo);
+			request.setAttribute("tarjetas", resultbloqueo);
+			rd = request.getRequestDispatcher("/jsp/ListarTodoBloqueo3.jsp");		
+			rd.forward(request, response);		
 			break;
 	
 	}
@@ -169,7 +211,8 @@ public class BancoServlet extends HttpServlet {
 		resultado1.setCupoMaximo(Integer.parseInt(request.getParameter("cupoMaximo")));
 		resultado1.setCupoDisponible(Integer.parseInt(request.getParameter("cupoDisponible")));
 		resultado1.setTipo(request.getParameter("tipo"));
-				
+		resultado1.setContrasenha("contrasenha");
+		resultado1.setNumComprobacion("numComprobacion");		
 		request.setAttribute("tarjetas", resultado1);
 		rd = request.getRequestDispatcher("/jsp/ListarTodo2.jsp");
 		
@@ -181,15 +224,55 @@ public class BancoServlet extends HttpServlet {
 	case "ampliarCupo":
 		TarjetaCredito actualizado = new TarjetaCredito();
 		actualizado.setId(Integer.parseInt(request.getParameter("id")));
-		actualizado.setCupoMaximo(Integer.parseInt(request.getParameter("cupoMaximo"))); 
-		int aumento = Integer.parseInt(request.getParameter("aumento"));
-		
+		actualizado.setCupoDisponible(Integer.parseInt(request.getParameter("cupoDisponible")));
+		actualizado.setCupoMaximo(Integer.parseInt(request.getParameter("cupoMaximo")));
+		actualizado.setContrasenha("contrasenha");
+		actualizado.setNumComprobacion("numComprobacion");
+		actualizado.setNumero("numero");
+		actualizado.setTipo("tipo");
+		int aumento = Integer.parseInt(request.getParameter("aumento"));		
 		AmpliarCupoControllerEjb controladorAumentar = new AmpliarCupoControllerEjb();
 		TarjetaCredito result = controladorAumentar.aumentacupo(actualizado,aumento);
 		request.setAttribute("tarjetas", result);
-		rd=request.getRequestDispatcher("/jsp/ListarTodo.jsp");
+		rd = request.getRequestDispatcher("/jsp/ListarTodo3.jsp");		
+		rd.forward(request, response);		
+		break;
+		
+		
+	case "bloqueo":
+		TarjetaCredito actualizadobloqueo = new TarjetaCredito();
+		actualizadobloqueo.setId(Integer.parseInt(request.getParameter("id")));
+		actualizadobloqueo.setCupoDisponible(Integer.parseInt(request.getParameter("cupoDisponible")));
+		actualizadobloqueo.setCupoMaximo(Integer.parseInt(request.getParameter("cupoMaximo")));
+		actualizadobloqueo.setContrasenha(request.getParameter("contrasenha"));
+		actualizadobloqueo.setNumComprobacion(request.getParameter("numComprobacion"));
+		actualizadobloqueo.setNumero(request.getParameter("numero"));
+		actualizadobloqueo.setTipo(request.getParameter("tipo"));
+		actualizadobloqueo.setTipo(request.getParameter("bloqueada"));		
+		BloquearTarjetaControllerEjb controladorbloquear = new BloquearTarjetaControllerEjb();
+		TarjetaCredito resultbloqueo = controladorbloquear.bloqueada(actualizadobloqueo);
+		request.setAttribute("tarjetas", resultbloqueo);
+		rd = request.getRequestDispatcher("/jsp/ListarTodoBloqueo3.jsp");		
+		rd.forward(request, response);		
+		break;
+		
+	case "buscarParaBloquear":
+		TarjetaCredito resulbloqueo = new TarjetaCredito();
+		resulbloqueo.setId( Integer.parseInt(request.getParameter("id"))); 
+		resulbloqueo.setNumero(request.getParameter("numero"));
+		resulbloqueo.setCupoMaximo(Integer.parseInt(request.getParameter("cupoMaximo")));
+		resulbloqueo.setCupoDisponible(Integer.parseInt(request.getParameter("cupoDisponible")));
+		resulbloqueo.setTipo(request.getParameter("tipo"));
+		resulbloqueo.setContrasenha("contrasenha");
+		resulbloqueo.setNumComprobacion("numComprobacion");
+		resulbloqueo.setTipo(request.getParameter("bloqueada"));
+				
+		request.setAttribute("tarjetas", resulbloqueo);
+		rd = request.getRequestDispatcher("/jsp/ListarTodoBloqueo2.jsp");
+		
 		rd.forward(request, response);
 		break;
+
 		
 	}
 	}

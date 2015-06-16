@@ -26,7 +26,7 @@
         
             
         <tr>
-         <form action="${ pageContext.request.contextPath}/Banco/ampliarCupo"  method="post">
+         <form action="${ pageContext.request.contextPath}/Banco/bloqueo"  method="post">
             <td><input type="text" name="id" id="id" value="<%=tarjeta.getId() %>" size=5></td>
             <td><input type="text" name="numero" id="numero" value="<%=tarjeta.getNumero() %>" size=5></td>
             <td><input type="text" name="cupoDisponible" id="cupoDisponible" value="<%=tarjeta.getCupoDisponible() %>" size=5></td>
@@ -34,13 +34,13 @@
             <td><input type="text" name="contrasenha" id="contrasenha" value="<%=tarjeta.getContrasenha() %>" size=5></td>
             <td><input type="text" name="numComprobacion" id="numComprobacion" value="<%=tarjeta.getNumComprobacion() %>" size=5></td>
             <td><input type="text" name="tipo" id="tipo" value="<%=tarjeta.getTipo() %>" size=5></td>
-            
+            <td><input type="text" name="bloqueada" id="bloqueada" value="<%=tarjeta.isBloqueada() %>" size=5></td> 
            
-            <td><input type="text" name="aumento" value="" ></td>
+            
            
 
             
-            <td><input type="submit" value="Ampliar" /></td>
+            <td><input type="submit" value="Bloquear" /></td>
             
                 
         </form>

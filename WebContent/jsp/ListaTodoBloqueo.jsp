@@ -49,7 +49,7 @@ function enviar(boton){
         
             
         <tr>
-         <form action="${ pageContext.request.contextPath}/Banco/buscarParaAmpliar"  method="post" >
+         <form action="${ pageContext.request.contextPath}/Banco/buscarParaBloquear"  method="post" >
             <td><input type="text" name="id" id="id <%=n %>" value="<%=t.getId()%>" size=5></td>
             <td><input type="text" name="numero" id="numero <%=n %>" value="<%=t.getNumero()%>" size=5></td>
             <td><input type="text" name="cupoMaximo" id="cupoMaximo <%=n %>" value="<%=t.getCupoMaximo()%>" size=5></td>
@@ -58,7 +58,7 @@ function enviar(boton){
            
 
             
-            <td><input type="submit" value="Ampliar" name="ampliar" /></td>
+            <td><input type="submit" value="Bloquear" name="bloquear" /></td>
             
                 
         </form>

@@ -97,16 +97,14 @@ public class TarjetaDaoJdbc implements TarjetaDao {
 			while (consulta.next()) {
 				TarjetaCredito tarjetaTemporal = new TarjetaCredito();
 				tarjetaTemporal.setId(consulta.getInt("id"));
-				tarjetaTemporal.setNumero("numero");
+				tarjetaTemporal.setNumero(consulta.getString("numero"));
 				tarjetaTemporal.setCupoMaximo(consulta.getInt("cupoMaximo"));
 				tarjetaTemporal.setCupoDisponible(consulta.getInt("cupoDisponible"));
-				tarjetaTemporal.setTipo("tipo");
-				tarjetaTemporal.setNumComprobacion("numComprobacion");
-				tarjetaTemporal.setContrasenha("contrasenha");
+				tarjetaTemporal.setTipo(consulta.getString("tipo"));
+				tarjetaTemporal.setNumComprobacion(consulta.getString("numComprobacion"));
+				tarjetaTemporal.setContrasenha(consulta.getString("contrasenha"));
 				tarjetaTemporal.setBloqueada(true);
-					
 				
-
 				tarjeta.add(tarjetaTemporal);
 
 			}
@@ -130,12 +128,12 @@ public class TarjetaDaoJdbc implements TarjetaDao {
 			ResultSet consulta = ps.executeQuery();
 			consulta.next();
 				tarjeta.setId(consulta.getInt("id"));
-				tarjeta.setNumero("numero");
+				tarjeta.setNumero(consulta.getString("numero"));
 				tarjeta.setCupoMaximo(consulta.getInt("cupoMaximo"));
 				tarjeta.setCupoDisponible(consulta.getInt("cupoDisponible"));
-				tarjeta.setTipo("tipo");
-				tarjeta.setNumComprobacion("numComprobacion");
-				tarjeta.setContrasenha("contrasenha");
+				tarjeta.setTipo(consulta.getString("tipo"));
+				tarjeta.setNumComprobacion(consulta.getNString("numComprobacion"));
+				tarjeta.setContrasenha(consulta.getString("contrasenha"));
 				tarjeta.setBloqueada(true);
 
 				
@@ -163,12 +161,12 @@ public TarjetaCredito buscarParaAumento(int id, int aumento) {
 			consulta.next();
 				
 			tarjeta.setId(consulta.getInt("id"));
-			tarjeta.setNumero("numero");
+			tarjeta.setNumero(consulta.getString("numero"));
 			tarjeta.setCupoMaximo(consulta.getInt("cupoMaximo")+aumento);
 			tarjeta.setCupoDisponible(consulta.getInt("cupoDisponible"));
-			tarjeta.setTipo("tipo");
-			tarjeta.setNumComprobacion("numComprobacion");
-			tarjeta.setContrasenha("contrasenha");
+			tarjeta.setTipo(consulta.getString("tipo"));
+			tarjeta.setNumComprobacion(consulta.getString("numComprobacion"));
+			tarjeta.setContrasenha(consulta.getString("contrasenha"));
 			tarjeta.setBloqueada(true);
 
 				
@@ -185,22 +183,16 @@ public TarjetaCredito buscarParaAumento(int id, int aumento) {
 	}
 
 	@Override
-	public void updatecupo(TarjetaCredito tarjeta, int aumento) {
+	public void updatecupo(TarjetaCredito t,int aumento) {
 		abrirConexion();
 		PreparedStatement ps;
 		try {
-			ps = cx.prepareStatement("UPDATE tarjetacredito SET cupoDisponible=?  WHERE idCliente = ?");
-			
-			
-				
-				ps.setInt(1, aumento );
-				
-				ps.setInt(2, id);
+			ps = cx.prepareStatement("UPDATE tarjetacredito SET cupoDisponible=?  WHERE id = ?");				
+				ps.setInt(1, aumento);				
+				ps.setInt(2, t.getId());
 				
 				 ps.executeUpdate();
-				 cx.commit();
-
-				
+				 cx.commit();				
 			}
 		 catch (SQLException e) {
 			 try {
@@ -219,6 +211,34 @@ public TarjetaCredito buscarParaAumento(int id, int aumento) {
 	}
 
 	}
+
+
+
+	public void updateBloqueo(TarjetaCredito actualizadobloqueo) {
+		abrirConexion();
+		PreparedStatement ps;
+		try {
+		ps = cx.prepareStatement("UPDATE tarjetacredito SET bloqueada=true  WHERE id = ?");				
+						
+		
+			ps.setInt(1, actualizadobloqueo.getId());
+			ps.executeUpdate();
+			 cx.commit();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		 	
+		 
+		 
+	}
+
+
+
+	
+
+
 
 
 

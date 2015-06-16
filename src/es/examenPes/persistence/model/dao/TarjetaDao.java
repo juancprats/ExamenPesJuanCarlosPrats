@@ -12,8 +12,8 @@ public interface TarjetaDao {
 
 	TarjetaCredito buscarPorId(int id);
 
-	void update(TarjetaCredito tarjeta);
+	
 
-	void updatecupo(TarjetaCredito tarjeta, int cupo);
+	void updatecupo(TarjetaCredito t,int aumento);
 
 }
