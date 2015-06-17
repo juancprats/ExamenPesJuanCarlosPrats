@@ -20,7 +20,7 @@ public ArrayList<TarjetaCredito> buscarPorId(int id) {
 @Override
 public void actualizar(TarjetaCredito actualizado) {
 	TarjetaDao tarjetaDao = new TarjetaDaoJdbc();
-	tarjetaDao.updatecupo(actualizado);
+	/*tarjetaDao.updatecupo(actualizado);*/
 	
 }
 }

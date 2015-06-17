@@ -28,7 +28,7 @@ public class TarjetaDaoJdbc implements TarjetaDao {
 			
 			cx = DriverManager.getConnection(
 					"jdbc:mysql://localhost:3306/Banco", "root",
-					"");
+					"root");
 			
 			cx.setAutoCommit(false);
 		} catch (ClassNotFoundException e) {
