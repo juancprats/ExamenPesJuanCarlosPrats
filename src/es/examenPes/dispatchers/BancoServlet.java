@@ -153,6 +153,23 @@ public class BancoServlet extends HttpServlet {
 			rd = request.getRequestDispatcher("/jsp/ListarTodoBloqueo3.jsp");		
 			rd.forward(request, response);		
 			break;
+		case "retirarSaldo":
+			rd = request.getRequestDispatcher("/jsp/altaUsuario.jsp");
+			rd.forward(request, response);
+			
+		/*case "compruebaUsuario":
+			TarjetaCredito usuario = new TarjetaCredito();
+			actualizado.setId(Integer.parseInt(request.getParameter("id")));
+			actualizado.setCupoMaximo(Integer.parseInt(request.getParameter("cupoMaximo"))); 
+			int aumento = Integer.parseInt(request.getParameter("aumento"));
+			
+			AmpliarCupoControllerEjb controladorAumentar = new AmpliarCupoControllerEjb();
+			TarjetaCredito result = controladorAumentar.aumentacupo(actualizado,aumento);
+			request.setAttribute("tarjetas", result);
+			rd = request.getRequestDispatcher("/jsp/ListarTodo2.jsp");
+			
+			rd.forward(request, response);*/
+			
 	
 	}
 	}
